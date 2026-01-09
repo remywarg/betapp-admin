@@ -54,15 +54,17 @@
       justify-content:center;
       margin-bottom:18px;
       user-select:none;
-      min-height:48px; /* yüklenirken zıplamasın */
+      height:48px;          /* yer sabit */
+      align-items:center;
     }
 
-    /* img gelmese bile yerini koru */
+    /* ✅ Flash'ı bitiren ayar: başlangıçta gizli */
     .logo{
       width:140px;
       height:48px;
       object-fit:contain;
       display:block;
+      visibility:hidden;     /* yüklenince açacağız */
     }
 
     .group{ margin-bottom:12px; }
@@ -135,12 +137,12 @@
     <div class="card">
 
       <div class="brand">
-        <img class="logo"
-             src="/assets/logo.png?v=2"
+        <img id="brandLogo"
+             class="logo"
+             src="/assets/logo.png?v=3"
              alt=""
              loading="eager"
-             decoding="async"
-             onerror="this.style.visibility='hidden'">
+             decoding="async">
       </div>
 
       <form id="loginForm">
@@ -184,6 +186,16 @@
   </div>
 
   <script>
+    // ✅ Logo sadece gerçekten yüklenince görünür (flash biter)
+    const logo = document.getElementById("brandLogo");
+    logo.addEventListener("load", () => {
+      logo.style.visibility = "visible";
+    });
+    logo.addEventListener("error", () => {
+      logo.style.visibility = "hidden";
+    });
+
+    // Demo login
     const form = document.getElementById("loginForm");
     const okMsg = document.getElementById("okMsg");
     const errMsg = document.getElementById("errMsg");
