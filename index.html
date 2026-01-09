@@ -56,23 +56,14 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 18px;
       user-select:none;
     }
     .logo{
-      width: 140px; /* ince-uzun */
+      width: 140px;
       height: auto;
       max-height: 48px;
       display:block;
-    }
-
-    .subtitle{
-      text-align:center;
-      color: var(--muted);
-      font-size: 13.5px;
-      margin: 2px 0 18px;
-      letter-spacing:.2px;
     }
 
     .group{ margin-bottom: 12px; }
@@ -91,6 +82,7 @@
       background: rgba(255,255,255,.08);
       color: var(--text);
       font-size: 14px;
+      font-weight: 500;
       outline: none;
     }
     .input::placeholder{ color: rgba(255,255,255,.30); }
@@ -108,17 +100,19 @@
       margin-top: 10px;
     }
 
+    /* ✅ APP İLE AYNI MİNİMAL BUTON */
     .btn{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding: 10px 18px;
+      padding: 9px 18px;              /* biraz daha ince */
       border-radius: 14px;
       border: 1px solid var(--border);
       background: var(--btn);
       color: var(--text);
       font-size: 14px;
-      font-weight: 650;
+      font-weight: 500;               /* 🔑 kalınlık düşürüldü */
+      letter-spacing: .2px;
       cursor:pointer;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
@@ -130,6 +124,7 @@
       color: rgba(255,255,255,.70);
       font-size: 13px;
       text-decoration: none;
+      font-weight: 500;
     }
     .link:hover{ text-decoration: underline; }
 
@@ -157,11 +152,8 @@
     <div class="card" role="main" aria-label="Admin Girişi">
 
       <div class="brand">
-        <!-- Admin panelde logo -->
         <img class="logo" src="/assets/logo.png?v=1" alt="Logo" onerror="this.style.display='none'">
       </div>
-
-      <div class="subtitle">Firma yönetim paneli</div>
 
       <form id="loginForm" autocomplete="on">
         <div class="group">
@@ -193,8 +185,6 @@
   </div>
 
   <script>
-    // Demo: Şimdilik sahte login.
-    // Sonra API bağlayacağız: POST /api/admin/login
     const form = document.getElementById("loginForm");
     const okMsg = document.getElementById("okMsg");
     const errMsg = document.getElementById("errMsg");
@@ -208,15 +198,12 @@
       const pass  = document.getElementById("password").value;
       const totp  = document.getElementById("totp").value.trim();
 
-      // Demo kabul: email boş değil, şifre >= 6, totp 6 hane
       const ok = email.includes("@") && pass.length >= 6 && /^\d{6}$/.test(totp);
 
       if(ok){
         okMsg.style.display = "block";
-        // demo token
         localStorage.setItem("admin_demo_auth", "1");
         setTimeout(() => {
-          // bir sonraki adımda dashboard.html yapacağız
           location.href = "/dashboard.html";
         }, 700);
       } else {
