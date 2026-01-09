@@ -10,7 +10,6 @@
     :root{
       --bg:#070708;
       --panel: rgba(25,25,27,.78);
-      --panel2: rgba(35,35,38,.72);
       --border: rgba(255,255,255,.10);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.58);
@@ -25,7 +24,7 @@
     html,body{ height:100%; }
     body{
       margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,Segoe UI,Roboto,Arial;
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui;
       background: radial-gradient(1100px 700px at 50% 25%, rgba(255,255,255,.08), transparent 60%),
                   linear-gradient(180deg, var(--bg), #000);
       color: var(--text);
@@ -37,142 +36,135 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 18px 16px calc(18px + env(safe-area-inset-bottom));
+      padding:18px 16px calc(18px + env(safe-area-inset-bottom));
     }
 
     .card{
       width:100%;
-      max-width: 420px;
-      background: var(--panel);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      box-shadow: 0 28px 90px rgba(0,0,0,.55);
-      padding: 22px;
+      max-width:420px;
+      background:var(--panel);
+      backdrop-filter:blur(18px);
+      border:1px solid var(--border);
+      border-radius:26px;
+      box-shadow:0 28px 90px rgba(0,0,0,.55);
+      padding:22px;
     }
 
     .brand{
       display:flex;
-      align-items:center;
       justify-content:center;
-      margin-bottom: 18px;
+      margin-bottom:18px;
       user-select:none;
     }
     .logo{
-      width: 140px;
-      height: auto;
-      max-height: 48px;
-      display:block;
+      width:140px;
+      max-height:48px;
     }
 
-    .group{ margin-bottom: 12px; }
+    .group{ margin-bottom:12px; }
     label{
       display:block;
-      font-size: 12.5px;
-      color: var(--muted2);
-      margin: 0 0 6px;
+      font-size:12.5px;
+      color:var(--muted2);
+      margin-bottom:6px;
     }
 
     .input{
       width:100%;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.08);
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 500;
-      outline: none;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      font-size:14px;
+      font-weight:500;
+      outline:none;
     }
-    .input::placeholder{ color: rgba(255,255,255,.30); }
+    .input::placeholder{ color:rgba(255,255,255,.30); }
 
-    /* iOS zoom olmasın */
-    @supports (-webkit-touch-callout: none){
+    /* iOS zoom engeli */
+    @supports (-webkit-touch-callout:none){
       .input{ font-size:16px; }
     }
 
     .row{
       display:flex;
-      gap: 10px;
-      align-items:center;
-      justify-content:space-between;
-      margin-top: 10px;
+      justify-content:flex-end;
+      margin-top:10px;
     }
 
-    /* ✅ APP İLE AYNI MİNİMAL BUTON */
     .btn{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding: 9px 18px;              /* biraz daha ince */
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--btn);
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 500;               /* 🔑 kalınlık düşürüldü */
-      letter-spacing: .2px;
+      padding:9px 18px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--btn);
+      color:var(--text);
+      font-size:14px;
+      font-weight:500;
+      letter-spacing:.2px;
       cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
     }
-    .btn:hover{ background: var(--btnHover); }
-    .btn:active{ transform: scale(.98); }
-
-    .link{
-      color: rgba(255,255,255,.70);
-      font-size: 13px;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .link:hover{ text-decoration: underline; }
+    .btn:hover{ background:var(--btnHover); }
+    .btn:active{ transform:scale(.98); }
 
     .msg{
-      margin-top: 12px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.35;
+      margin-top:12px;
+      font-size:13px;
       display:none;
     }
-    .msg.ok{ color: var(--ok); }
-    .msg.err{ color: var(--danger); }
+    .msg.ok{ color:var(--ok); }
+    .msg.err{ color:var(--danger); }
 
     .foot{
-      margin-top: 14px;
+      margin-top:14px;
       text-align:center;
-      color: rgba(255,255,255,.35);
-      font-size: 12px;
+      color:rgba(255,255,255,.35);
+      font-size:12px;
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <div class="card" role="main" aria-label="Admin Girişi">
+    <div class="card">
 
       <div class="brand">
-        <img class="logo" src="/assets/logo.png?v=1" alt="Logo" onerror="this.style.display='none'">
+        <img class="logo" src="/assets/logo.png?v=1" alt="Logo"
+             onerror="this.style.display='none'">
       </div>
 
-      <form id="loginForm" autocomplete="on">
+      <form id="loginForm">
         <div class="group">
-          <label for="email">E-posta</label>
-          <input class="input" id="email" type="email" placeholder="ornek@firma.com" autocomplete="email" required>
+          <label for="username">Kullanıcı Adı</label>
+          <input class="input" id="username" type="text"
+                 placeholder="admin_kullanici"
+                 autocomplete="username"
+                 required>
         </div>
 
         <div class="group">
           <label for="password">Şifre</label>
-          <input class="input" id="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+          <input class="input" id="password" type="password"
+                 placeholder="••••••••"
+                 autocomplete="current-password"
+                 required>
         </div>
 
         <div class="group">
           <label for="totp">2FA Kodu</label>
-          <input class="input" id="totp" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="6 haneli kod" autocomplete="one-time-code" required>
+          <input class="input" id="totp"
+                 inputmode="numeric"
+                 pattern="[0-9]*"
+                 maxlength="6"
+                 placeholder="6 haneli kod"
+                 autocomplete="one-time-code"
+                 required>
         </div>
 
         <div class="row">
-          <a class="link" href="#" id="forgot">Şifremi unuttum</a>
           <button class="btn" type="submit">Giriş Yap</button>
         </div>
 
@@ -194,26 +186,22 @@
       okMsg.style.display = "none";
       errMsg.style.display = "none";
 
-      const email = document.getElementById("email").value.trim().toLowerCase();
-      const pass  = document.getElementById("password").value;
-      const totp  = document.getElementById("totp").value.trim();
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value;
+      const totp = document.getElementById("totp").value.trim();
 
-      const ok = email.includes("@") && pass.length >= 6 && /^\d{6}$/.test(totp);
+      // DEMO kontrol
+      const ok = user.length >= 3 && pass.length >= 6 && /^\d{6}$/.test(totp);
 
       if(ok){
         okMsg.style.display = "block";
-        localStorage.setItem("admin_demo_auth", "1");
-        setTimeout(() => {
-          location.href = "/dashboard.html";
-        }, 700);
-      } else {
+        localStorage.setItem("admin_demo_auth","1");
+        setTimeout(()=>{
+          location.href="/dashboard.html";
+        },700);
+      }else{
         errMsg.style.display = "block";
       }
-    });
-
-    document.getElementById("forgot").addEventListener("click", (e) => {
-      e.preventDefault();
-      alert("Demo: Şifre sıfırlama daha sonra eklenecek.");
     });
   </script>
 </body>
