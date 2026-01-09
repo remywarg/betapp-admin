@@ -52,19 +52,17 @@
     .brand{
       display:flex;
       justify-content:center;
+      align-items:center;
+      height:48px;
       margin-bottom:18px;
       user-select:none;
-      height:48px;          /* yer sabit */
-      align-items:center;
     }
-
-    /* ✅ Flash'ı bitiren ayar: başlangıçta gizli */
     .logo{
       width:140px;
       height:48px;
       object-fit:contain;
       display:block;
-      visibility:hidden;     /* yüklenince açacağız */
+      visibility:hidden; /* load olunca aç */
     }
 
     .group{ margin-bottom:12px; }
@@ -137,12 +135,7 @@
     <div class="card">
 
       <div class="brand">
-        <img id="brandLogo"
-             class="logo"
-             src="/assets/logo.png?v=3"
-             alt=""
-             loading="eager"
-             decoding="async">
+        <img id="brandLogo" class="logo" src="assets/logo.png?v=1" alt="" decoding="async" loading="eager">
       </div>
 
       <form id="loginForm">
@@ -186,14 +179,15 @@
   </div>
 
   <script>
-    // ✅ Logo sadece gerçekten yüklenince görünür (flash biter)
+    // Logo flash fix
     const logo = document.getElementById("brandLogo");
-    logo.addEventListener("load", () => {
-      logo.style.visibility = "visible";
-    });
-    logo.addEventListener("error", () => {
-      logo.style.visibility = "hidden";
-    });
+    logo.addEventListener("load", () => logo.style.visibility = "visible");
+    logo.addEventListener("error", () => logo.style.visibility = "hidden");
+
+    // Eğer zaten login olduysa direkt dashboard'a
+    if (localStorage.getItem("admin_demo_auth") === "1") {
+      location.replace("dashboard.html");
+    }
 
     // Demo login
     const form = document.getElementById("loginForm");
@@ -212,10 +206,10 @@
       const ok = user.length >= 3 && pass.length >= 6 && /^\d{6}$/.test(totp);
 
       if(ok){
-        okMsg.style.display = "block";
         localStorage.setItem("admin_demo_auth","1");
-        setTimeout(()=> location.href="/dashboard.html", 700);
-      }else{
+        okMsg.style.display = "block";
+        setTimeout(()=> location.href = "dashboard.html", 400);
+      } else {
         errMsg.style.display = "block";
       }
     });
