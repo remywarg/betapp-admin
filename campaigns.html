@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>BetApp • Admin</title>
+  <meta name="theme-color" content="#0b0b0c" />
+
+  <style>
+    :root{
+      --bg:#070708;
+      --panel: rgba(25,25,27,.78);
+      --panel2: rgba(35,35,38,.72);
+      --border: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.58);
+      --muted2: rgba(255,255,255,.42);
+      --btn: rgba(255,255,255,.10);
+      --btnHover: rgba(255,255,255,.14);
+      --danger: rgba(255,90,90,.92);
+      --ok: rgba(120,255,180,.85);
+      --shadow: 0 28px 90px rgba(0,0,0,.55);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui;
+      background: radial-gradient(1100px 700px at 50% 25%, rgba(255,255,255,.08), transparent 60%),
+                  linear-gradient(180deg, var(--bg), #000);
+      color: var(--text);
+      overflow-x:hidden;
+    }
+
+    .layout{ min-height:100vh; display:grid; grid-template-columns: 280px 1fr; }
+
+    .sidebar{
+      position:sticky; top:0; height:100vh;
+      padding: 18px 14px calc(18px + env(safe-area-inset-bottom));
+      border-right: 1px solid rgba(255,255,255,.08);
+      background: rgba(10,10,11,.55);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand{
+      display:flex; align-items:center; justify-content:center;
+      height:56px; margin: 6px 0 16px; user-select:none;
+    }
+    .logo{ width:140px; height:48px; object-fit:contain; display:block; visibility:hidden; }
+
+    .nav{ display:flex; flex-direction:column; gap:6px; margin-top:10px; }
+    .nav a{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:14px;
+      text-decoration:none; color: rgba(255,255,255,.82);
+      border:1px solid transparent; background:transparent;
+      font-size:14px; font-weight:500;
+    }
+    .nav a:hover{ background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.08); }
+    .nav a.active{ background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.10); }
+    .dot{ width:7px; height:7px; border-radius:99px; background: rgba(255,255,255,.35); }
+    .nav a.active .dot{ background: rgba(255,255,255,.78); }
+
+    .spacer{ flex:1; }
+    .logout{
+      margin-top:14px; width:100%;
+      padding:10px 12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.82);
+      font-size:14px; font-weight:500;
+      cursor:pointer;
+    }
+    .logout:hover{ background: rgba(255,255,255,.10); }
+
+    .overlay{
+      display:none; position:fixed; inset:0;
+      background: rgba(0,0,0,.55); z-index: 20;
+    }
+    .overlay.open{ display:block; }
+
+    .main{ padding:18px 18px calc(18px + env(safe-area-inset-bottom)); }
+    .topbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; }
+    .title{ font-size:18px; font-weight:650; margin:0; letter-spacing:.2px; }
+    .subtitle{ margin-top:4px; font-size:13px; color: var(--muted); font-weight:500; }
+
+    .mobileBtn{
+      display:none;
+      padding:9px 12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.84);
+      font-size:14px; font-weight:500;
+      cursor:pointer;
+    }
+
+    .card{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: 16px;
+    }
+
+    /* Filters */
+    .filters{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-bottom: 12px;
+    }
+
+    .tabs{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+    }
+    .tab{
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.82);
+      font-size: 13px;
+      font-weight: 500;
+      cursor:pointer;
+      user-select:none;
+    }
+    .tab.active{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.14);
+      color: rgba(255,255,255,.92);
+    }
+
+    .pageCtrl{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      color: rgba(255,255,255,.70);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 9px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: var(--btn);
+      color: rgba(255,255,255,.90);
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing:.2px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{ background: var(--btnHover); }
+    .btn:active{ transform: scale(.98); }
+    .btn.danger{ background: rgba(255,90,90,.12); border-color: rgba(255,90,90,.22); color: rgba(255,170,170,.95); }
+    .btn.danger:hover{ background: rgba(255,90,90,.16); }
+
+    /* Table */
+    .tableWrap{
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      overflow:hidden;
+    }
+
+    table{ width:100%; border-collapse: collapse; font-size:13.5px; }
+    thead th{
+      text-align:left; padding:12px 14px;
+      color: rgba(255,255,255,.72); font-weight:600;
+      background: rgba(255,255,255,.04);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    tbody td{
+      padding:12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      color: rgba(255,255,255,.88);
+      vertical-align: top;
+    }
+    tbody tr:last-child td{ border-bottom:none; }
+    tbody tr:hover td{ background: rgba(255,255,255,.03); cursor:pointer; }
+
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:4px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-size:12px; color: rgba(255,255,255,.80);
+      white-space:nowrap;
+    }
+    .pill.ok{ border-color: rgba(120,255,180,.22); background: rgba(120,255,180,.10); color: rgba(180,255,215,.92); }
+    .pill.bad{ border-color: rgba(255,90,90,.24); background: rgba(255,90,90,.10); color: rgba(255,170,170,.95); }
+
+    .muted{ color: rgba(255,255,255,.60); }
+    .msg{ max-width: 520px; color: rgba(255,255,255,.78); line-height: 1.35; }
+
+    /* Modal */
+    .modalWrap{
+      position:fixed; inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 16px;
+      z-index: 50;
+    }
+    .modalWrap.open{ display:flex; }
+    .modalBg{ position:absolute; inset:0; background: rgba(0,0,0,.65); }
+    .modal{
+      position:relative;
+      width:100%;
+      max-width: 560px;
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: 16px;
+    }
+    .modalHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .modalTitle{
+      margin:0;
+      font-size: 14px;
+      font-weight: 650;
+      color: rgba(255,255,255,.90);
+    }
+    .xBtn{
+      border:none; background: transparent;
+      color: rgba(255,255,255,.60);
+      font-size: 20px;
+      cursor:pointer;
+      padding: 4px 10px;
+      border-radius: 10px;
+    }
+    .xBtn:hover{ background: rgba(255,255,255,.06); }
+
+    .previewBox{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      padding: 14px;
+      margin-top: 10px;
+    }
+    .pTitle{ margin:0 0 6px; font-size: 13.5px; font-weight: 650; color: rgba(255,255,255,.92); }
+    .pMsg{ margin:0; font-size: 13px; color: rgba(255,255,255,.74); line-height: 1.35; }
+    .note{
+      margin-top: 10px;
+      font-size: 12.5px;
+      color: rgba(255,255,255,.55);
+      line-height: 1.4;
+    }
+
+    @media (max-width: 920px){
+      .layout{ grid-template-columns: 1fr; }
+      .sidebar{
+        position:fixed; inset:0 auto 0 0;
+        width:280px;
+        transform: translateX(-110%);
+        transition: transform .18s ease;
+        z-index:30;
+      }
+      .sidebar.open{ transform: translateX(0); }
+      .mobileBtn{ display:inline-flex; }
+      .overlay.open{ display:block; }
+      .main{ padding:16px 14px calc(16px + env(safe-area-inset-bottom)); }
+      thead{ display:none; }
+      tbody td{ display:block; padding:10px 14px; }
+      tbody tr{ display:block; border-bottom: 1px solid rgba(255,255,255,.07); }
+      tbody tr:last-child{ border-bottom:none; }
+      tbody tr:hover td{ background: transparent; cursor: default; }
+      .rowLine{
+        display:flex; align-items:center; justify-content:space-between; gap:10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img id="brandLogo" class="logo" src="assets/logo.png?v=1" alt="" decoding="async" loading="eager">
+      </div>
+
+      <nav class="nav">
+        <a href="dashboard.html"><span class="dot"></span> Dashboard</a>
+        <a href="send.html"><span class="dot"></span> Bildirim Gönder</a>
+        <a class="active" href="campaigns.html"><span class="dot"></span> Kampanyalar</a>
+        <a href="users.html"><span class="dot"></span> Kullanıcılar</a>
+        <a href="profile.html"><span class="dot"></span> Profil</a>
+      </nav>
+
+      <div class="spacer"></div>
+      <button class="logout" id="logoutBtn">Çıkış Yap</button>
+    </aside>
+
+    <div class="overlay" id="overlay"></div>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1 class="title">Kampanyalar</h1>
+          <div class="subtitle">Geçmiş kampanyalar ve zamanlı gönderimler</div>
+        </div>
+        <button class="mobileBtn" id="menuBtn">Menü</button>
+      </div>
+
+      <section class="card">
+        <div class="filters">
+          <div class="tabs" role="tablist">
+            <button class="tab active" id="tabAll" type="button">Tümü</button>
+            <button class="tab" id="tabNow" type="button">Anında</button>
+            <button class="tab" id="tabLater" type="button">Zamanlı</button>
+            <button class="tab" id="tabTest" type="button">Test</button>
+          </div>
+
+          <div class="pageCtrl">
+            <button class="btn" id="prevBtn" type="button">←</button>
+            <span id="pageInfo">Sayfa 1</span>
+            <button class="btn" id="nextBtn" type="button">→</button>
+          </div>
+        </div>
+
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:130px">Tür</th>
+                <th style="width:160px">Durum</th>
+                <th style="width:170px">Tarih</th>
+                <th style="width:240px">Başlık</th>
+                <th>Mesaj</th>
+                <th style="width:140px"></th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Detail modal -->
+  <div class="modalWrap" id="modalWrap" aria-hidden="true">
+    <div class="modalBg" id="modalBg"></div>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Kampanya detayı">
+      <div class="modalHead">
+        <h3 class="modalTitle">Kampanya Detayı</h3>
+        <button class="xBtn" id="modalClose" aria-label="Kapat">×</button>
+      </div>
+
+      <div class="previewBox">
+        <p class="pTitle" id="mTitle">—</p>
+        <p class="pMsg" id="mMsg">—</p>
+      </div>
+
+      <div class="note" id="mMeta"></div>
+
+      <div class="filters" style="margin-top:12px; justify-content:flex-end;">
+        <button class="btn danger" id="mCancelBtn" type="button" style="display:none;">İptal Et</button>
+        <button class="btn" id="mOkBtn" type="button">Kapat</button>
+      </div>
+
+      <div class="note" id="mHint" style="display:none;"></div>
+    </div>
+  </div>
+
+  <script>
+    // Auth guard (demo)
+    if (localStorage.getItem("admin_demo_auth") !== "1") location.replace("index.html");
+
+    // Logo
+    const brandLogo = document.getElementById("brandLogo");
+    brandLogo.addEventListener("load", () => brandLogo.style.visibility = "visible");
+    brandLogo.addEventListener("error", () => brandLogo.style.visibility = "hidden");
+
+    // Mobile menu
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const menuBtn = document.getElementById("menuBtn");
+    function openMenu(){ sidebar.classList.add("open"); overlay.classList.add("open"); }
+    function closeMenu(){ sidebar.classList.remove("open"); overlay.classList.remove("open"); }
+    menuBtn.addEventListener("click", openMenu);
+    overlay.addEventListener("click", closeMenu);
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("admin_demo_auth");
+      location.replace("index.html");
+    });
+
+    // Demo dataset (API sonra bağlanacak)
+    // status: sent | scheduled | cancelled
+    const ALL = [
+      { id:"c1", type:"Anında",  status:"sent",      at:"2026-01-09 18:20", title:"Bonus Fırsatı",     msg:"Sürpriz bonus hesabınıza tanımlandı." },
+      { id:"c2", type:"Zamanlı", status:"scheduled", at:"2026-01-09 21:00", title:"Akşam Kampanyası",  msg:"Bu akşam özel oranlar sizi bekliyor." },
+      { id:"c3", type:"Test",    status:"sent",      at:"2026-01-08 16:12", title:"Test",             msg:"Test bildirimi" },
+      { id:"c4", type:"Anında",  status:"sent",      at:"2026-01-08 13:05", title:"Sürpriz",          msg:"Sadece bugün geçerli fırsat!" },
+      { id:"c5", type:"Anında",  status:"sent",      at:"2026-01-07 19:40", title:"Duyuru",           msg:"Yeni kampanya aktif edildi." },
+      { id:"c6", type:"Zamanlı", status:"scheduled", at:"2026-01-10 14:30", title:"Öğlen Özel",       msg:"Öğlen kampanyası başlıyor." },
+      { id:"c7", type:"Test",    status:"sent",      at:"2026-01-06 11:10", title:"Test 2",           msg:"Ekip testi" },
+      { id:"c8", type:"Zamanlı", status:"cancelled", at:"2026-01-05 20:00", title:"İptal Edilen",     msg:"Bu kampanya iptal edildi." },
+      { id:"c9", type:"Anında",  status:"sent",      at:"2026-01-04 21:44", title:"Hatırlatma",       msg:"Bugün son gün." },
+      { id:"c10",type:"Anında",  status:"sent",      at:"2026-01-03 17:15", title:"Hoş Geldiniz",     msg:"Yeni kampanyaları kaçırmayın." }
+    ];
+
+    // Filter + paging
+    let filter = "all"; // all | Anında | Zamanlı | Test
+    let page = 1;
+    const pageSize = 6;
+
+    const tabAll   = document.getElementById("tabAll");
+    const tabNow   = document.getElementById("tabNow");
+    const tabLater = document.getElementById("tabLater");
+    const tabTest  = document.getElementById("tabTest");
+    const tabs = [tabAll, tabNow, tabLater, tabTest];
+
+    function setFilter(f){
+      filter = f;
+      page = 1;
+      tabs.forEach(t=>t.classList.remove("active"));
+      if(f==="all") tabAll.classList.add("active");
+      if(f==="Anında") tabNow.classList.add("active");
+      if(f==="Zamanlı") tabLater.classList.add("active");
+      if(f==="Test") tabTest.classList.add("active");
+      render();
+    }
+
+    tabAll.onclick   = () => setFilter("all");
+    tabNow.onclick   = () => setFilter("Anında");
+    tabLater.onclick = () => setFilter("Zamanlı");
+    tabTest.onclick  = () => setFilter("Test");
+
+    document.getElementById("prevBtn").onclick = () => { if(page>1){ page--; render(); } };
+    document.getElementById("nextBtn").onclick = () => { if(page<maxPage()){ page++; render(); } };
+
+    function filtered(){
+      if(filter==="all") return [...ALL];
+      return ALL.filter(x => x.type === filter);
+    }
+    function maxPage(){
+      const total = filtered().length;
+      return Math.max(1, Math.ceil(total / pageSize));
+    }
+
+    const tbody = document.getElementById("tbody");
+    const pageInfo = document.getElementById("pageInfo");
+
+    function statusPill(status){
+      if(status==="sent") return `<span class="pill ok">Gönderildi</span>`;
+      if(status==="scheduled") return `<span class="pill">Zamanlandı</span>`;
+      return `<span class="pill bad">İptal</span>`;
+    }
+
+    function render(){
+      const list = filtered();
+      const mp = maxPage();
+      if(page>mp) page = mp;
+
+      pageInfo.textContent = `Sayfa ${page} / ${mp}`;
+      tbody.innerHTML = "";
+
+      const start = (page-1)*pageSize;
+      const items = list.slice(start, start + pageSize);
+
+      items.forEach(item => {
+        const tr = document.createElement("tr");
+        const canCancel = item.type==="Zamanlı" && item.status==="scheduled";
+
+        // Desktop table cells
+        tr.innerHTML = `
+          <td><span class="pill">${escapeHtml(item.type)}</span></td>
+          <td>${statusPill(item.status)}</td>
+          <td class="muted">${escapeHtml(item.at)}</td>
+          <td>${escapeHtml(item.title)}</td>
+          <td class="msg">${escapeHtml(item.msg)}</td>
+          <td>
+            ${canCancel ? `<button class="btn danger" data-action="cancel" data-id="${item.id}" type="button">İptal Et</button>` : ``}
+          </td>
+        `;
+
+        // Row click -> detail (but cancel button shouldn't open modal)
+        tr.addEventListener("click", (e) => {
+          const btn = e.target.closest("button");
+          if(btn) return; // ignore, buttons handle themselves
+          openDetail(item);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      // bind cancel buttons
+      tbody.querySelectorAll('button[data-action="cancel"]').forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const id = btn.getAttribute("data-id");
+          cancelCampaign(id);
+        });
+      });
+    }
+
+    // Cancel (demo)
+    function cancelCampaign(id){
+      const idx = ALL.findIndex(x => x.id === id);
+      if(idx === -1) return;
+      // DEMO: API olacak -> POST /api/admin/campaigns/{id}/cancel
+      ALL[idx].status = "cancelled";
+      render();
+    }
+
+    // Modal detail
+    const modalWrap = document.getElementById("modalWrap");
+    const modalBg = document.getElementById("modalBg");
+    const modalClose = document.getElementById("modalClose");
+    const mOkBtn = document.getElementById("mOkBtn");
+    const mCancelBtn = document.getElementById("mCancelBtn");
+    const mTitle = document.getElementById("mTitle");
+    const mMsg = document.getElementById("mMsg");
+    const mMeta = document.getElementById("mMeta");
+    const mHint = document.getElementById("mHint");
+    let currentId = null;
+
+    function openDetail(item){
+      currentId = item.id;
+      mTitle.textContent = item.title;
+      mMsg.textContent = item.msg;
+
+      const statusLabel =
+        item.status==="sent" ? "Gönderildi" :
+        item.status==="scheduled" ? "Zamanlandı" : "İptal";
+
+      mMeta.textContent = `Tür: ${item.type} • Durum: ${statusLabel} • Tarih: ${item.at}`;
+
+      const canCancel = item.type==="Zamanlı" && item.status==="scheduled";
+      mCancelBtn.style.display = canCancel ? "inline-flex" : "none";
+      mHint.style.display = canCancel ? "block" : "none";
+      mHint.textContent = canCancel ? "Bu kampanya henüz gönderilmedi. İsterseniz iptal edebilirsiniz." : "";
+
+      modalWrap.classList.add("open");
+      modalWrap.setAttribute("aria-hidden","false");
+    }
+
+    function closeModal(){
+      modalWrap.classList.remove("open");
+      modalWrap.setAttribute("aria-hidden","true");
+      currentId = null;
+    }
+    modalBg.onclick = closeModal;
+    modalClose.onclick = closeModal;
+    mOkBtn.onclick = closeModal;
+
+    mCancelBtn.onclick = () => {
+      if(!currentId) return;
+      cancelCampaign(currentId);
+      closeModal();
+    };
+
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // initial
+    render();
+  </script>
+</body>
+</html>
