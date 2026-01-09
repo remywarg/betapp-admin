@@ -17,8 +17,6 @@
       --btn: rgba(255,255,255,.10);
       --btnHover: rgba(255,255,255,.14);
       --shadow: 0 28px 90px rgba(0,0,0,.55);
-      --ok: rgba(120,255,180,.90);
-      --bad: rgba(255,90,90,.92);
     }
 
     *{ box-sizing:border-box; }
@@ -187,7 +185,6 @@
       white-space:nowrap;
     }
     tbody tr:last-child td{ border-bottom:none; }
-    tbody tr:hover td{ background: rgba(255,255,255,.03); cursor:pointer; }
 
     .pill{
       display:inline-flex; align-items:center;
@@ -201,66 +198,6 @@
     .pill.bad{ border-color: rgba(255,90,90,.24); background: rgba(255,90,90,.10); color: rgba(255,170,170,.95); }
 
     .muted{ color: rgba(255,255,255,.60); }
-
-    /* Modal */
-    .modalWrap{
-      position:fixed; inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 16px;
-      z-index: 50;
-    }
-    .modalWrap.open{ display:flex; }
-    .modalBg{ position:absolute; inset:0; background: rgba(0,0,0,.65); }
-    .modal{
-      position:relative;
-      width:100%;
-      max-width: 520px;
-      background: var(--panel);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-      padding: 16px;
-    }
-    .modalHead{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .modalTitle{
-      margin:0;
-      font-size: 14px;
-      font-weight: 650;
-      color: rgba(255,255,255,.90);
-    }
-    .xBtn{
-      border:none; background: transparent;
-      color: rgba(255,255,255,.60);
-      font-size: 20px;
-      cursor:pointer;
-      padding: 4px 10px;
-      border-radius: 10px;
-    }
-    .xBtn:hover{ background: rgba(255,255,255,.06); }
-
-    .detail{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .kv{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 18px;
-      padding: 12px;
-    }
-    .k{ font-size: 12px; color: rgba(255,255,255,.55); margin:0 0 6px; }
-    .v{ font-size: 13.5px; color: rgba(255,255,255,.88); margin:0; font-weight: 600; }
 
     @media (max-width: 920px){
       .layout{ grid-template-columns: 1fr; }
@@ -280,7 +217,6 @@
       tbody td{ display:block; padding:10px 14px; white-space:normal; }
       tbody tr{ display:block; border-bottom: 1px solid rgba(255,255,255,.07); }
       tbody tr:last-child{ border-bottom:none; }
-      tbody tr:hover td{ background: transparent; cursor: default; }
     }
   </style>
 </head>
@@ -349,23 +285,6 @@
     </main>
   </div>
 
-  <!-- Detail modal -->
-  <div class="modalWrap" id="modalWrap" aria-hidden="true">
-    <div class="modalBg" id="modalBg"></div>
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Kullanıcı detayı">
-      <div class="modalHead">
-        <h3 class="modalTitle">Kullanıcı Detayı</h3>
-        <button class="xBtn" id="modalClose" aria-label="Kapat">×</button>
-      </div>
-
-      <div class="detail" id="detailGrid"></div>
-
-      <div style="display:flex; justify-content:flex-end; margin-top:12px;">
-        <button class="btn" id="mOkBtn" type="button">Kapat</button>
-      </div>
-    </div>
-  </div>
-
   <script>
     // Auth guard (demo)
     if (localStorage.getItem("admin_demo_auth") !== "1") location.replace("index.html");
@@ -391,14 +310,10 @@
     });
 
     // Demo users (API sonra)
-    // appInstalled: true/false
-    // pushEnabled: true/false
     const USERS = [];
     const devices = ["iOS","Android"];
-    const browsers = ["Safari","Chrome"];
     function pad(n){ return String(n).padStart(2,"0"); }
 
-    // Generate demo
     for(let i=1;i<=220;i++){
       const u = "user" + pad(Math.floor(i/10)) + "_" + (i);
       const device = devices[i%2];
@@ -409,7 +324,6 @@
       USERS.push({ username:u, device, browser, appInstalled, pushEnabled, lastSeen });
     }
 
-    // State
     let q = "";
     let page = 1;
     const pageSize = 12;
@@ -453,7 +367,6 @@
           <td>${pillYesNo(item.pushEnabled, "Açık", "Kapalı")}</td>
           <td class="muted">${escapeHtml(item.lastSeen)}</td>
         `;
-        tr.addEventListener("click", () => openDetail(item));
         tbody.appendChild(tr);
       });
     }
@@ -481,43 +394,6 @@
       }
     });
 
-    // Modal detail
-    const modalWrap = document.getElementById("modalWrap");
-    const modalBg = document.getElementById("modalBg");
-    const modalClose = document.getElementById("modalClose");
-    const mOkBtn = document.getElementById("mOkBtn");
-    const detailGrid = document.getElementById("detailGrid");
-
-    function openDetail(item){
-      detailGrid.innerHTML = `
-        ${kv("Kullanıcı", item.username)}
-        ${kv("Cihaz", item.device)}
-        ${kv("Tarayıcı", item.browser)}
-        ${kv("Uygulama", item.appInstalled ? "Aktif" : "Pasif")}
-        ${kv("Bildirim", item.pushEnabled ? "Açık" : "Kapalı")}
-        ${kv("Son Görülme", item.lastSeen)}
-      `;
-      modalWrap.classList.add("open");
-      modalWrap.setAttribute("aria-hidden","false");
-    }
-
-    function closeModal(){
-      modalWrap.classList.remove("open");
-      modalWrap.setAttribute("aria-hidden","true");
-    }
-    modalBg.onclick = closeModal;
-    modalClose.onclick = closeModal;
-    mOkBtn.onclick = closeModal;
-
-    function kv(k,v){
-      return `
-        <div class="kv">
-          <p class="k">${escapeHtml(k)}</p>
-          <p class="v">${escapeHtml(v)}</p>
-        </div>
-      `;
-    }
-
     function escapeHtml(str){
       return String(str ?? "")
         .replaceAll("&","&amp;")
@@ -527,7 +403,6 @@
         .replaceAll("'","&#039;");
     }
 
-    // init
     render();
   </script>
 </body>
