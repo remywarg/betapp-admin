@@ -12,286 +12,242 @@
       --panel: rgba(25,25,27,.78);
       --border: rgba(255,255,255,.10);
       --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.58);
-      --muted2: rgba(255,255,255,.42);
+      --muted: rgba(255,255,255,.55);
       --shadow: 0 28px 90px rgba(0,0,0,.55);
     }
+
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
       margin:0;
       font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui;
-      background: radial-gradient(1100px 700px at 50% 25%, rgba(255,255,255,.08), transparent 60%),
-                  linear-gradient(180deg, var(--bg), #000);
+      background:
+        radial-gradient(1100px 700px at 50% 25%, rgba(255,255,255,.08), transparent 60%),
+        linear-gradient(180deg, var(--bg), #000);
       color: var(--text);
-      overflow-x:hidden;
     }
 
     .layout{
       min-height:100vh;
       display:grid;
-      grid-template-columns: 280px 1fr;
+      grid-template-columns:280px 1fr;
     }
 
+    /* Sidebar */
     .sidebar{
       position:sticky;
       top:0;
       height:100vh;
-      padding: 18px 14px calc(18px + env(safe-area-inset-bottom));
-      border-right: 1px solid rgba(255,255,255,.08);
-      background: rgba(10,10,11,.55);
+      padding:18px 14px;
+      background:rgba(10,10,11,.55);
       backdrop-filter: blur(18px);
+      border-right:1px solid rgba(255,255,255,.08);
     }
 
     .brand{
       display:flex;
-      align-items:center;
       justify-content:center;
+      align-items:center;
       height:56px;
-      margin: 6px 0 16px;
-      user-select:none;
+      margin-bottom:16px;
     }
+
     .logo{
       width:140px;
       height:48px;
       object-fit:contain;
-      display:block;
       visibility:hidden;
     }
 
-    .nav{ display:flex; flex-direction:column; gap:6px; margin-top:10px; }
-    .nav a{
-      display:flex; align-items:center; gap:10px;
-      padding:10px 12px; border-radius:14px;
-      text-decoration:none; color: rgba(255,255,255,.82);
-      border:1px solid transparent; background:transparent;
-      font-size:14px; font-weight:500;
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
     }
-    .nav a:hover{ background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.08); }
-    .nav a.active{ background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.10); }
-    .dot{ width:7px; height:7px; border-radius:99px; background: rgba(255,255,255,.35); }
-    .nav a.active .dot{ background: rgba(255,255,255,.78); }
+
+    .nav a{
+      padding:10px 12px;
+      border-radius:14px;
+      text-decoration:none;
+      color:rgba(255,255,255,.82);
+      font-size:14px;
+      font-weight:500;
+    }
+
+    .nav a.active{
+      background:rgba(255,255,255,.09);
+    }
 
     .spacer{ flex:1; }
+
     .logout{
-      margin-top:14px; width:100%;
-      padding:10px 12px; border-radius:14px;
+      margin-top:16px;
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.82);
-      font-size:14px; font-weight:500;
-      cursor:pointer;
-    }
-    .logout:hover{ background: rgba(255,255,255,.10); }
-
-    .main{ padding:18px 18px calc(18px + env(safe-area-inset-bottom)); }
-    .topbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; }
-    .title{ font-size:18px; font-weight:650; margin:0; letter-spacing:.2px; }
-    .subtitle{ margin-top:4px; font-size:13px; color: var(--muted); font-weight:500; }
-
-    .mobileBtn{
-      display:none;
-      padding:9px 12px; border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.84);
-      font-size:14px; font-weight:500;
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.82);
       cursor:pointer;
     }
 
-    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px; }
+    /* Main */
+    .main{
+      padding:18px;
+    }
+
+    .title{
+      font-size:18px;
+      font-weight:650;
+      margin:0 0 16px;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .stat{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .statLabel{
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .statValue{
+      font-size:28px;
+      font-weight:700;
+      letter-spacing:.3px;
+    }
+
     .card{
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-      padding: 16px;
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:16px;
+      box-shadow:var(--shadow);
     }
-    .metricLabel{ color: var(--muted); font-size:12.8px; font-weight:500; margin:0 0 8px; }
-    .metricValue{ font-size:28px; font-weight:650; margin:0; letter-spacing:.2px; }
-    .metricHint{ margin-top:8px; font-size:12.5px; color: var(--muted2); }
 
-    .sectionTitle{ margin:18px 0 10px; font-size:14px; font-weight:650; color: rgba(255,255,255,.88); }
-    .tableWrap{
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13.5px;
     }
-    table{ width:100%; border-collapse: collapse; font-size:13.5px; }
-    thead th{
-      text-align:left; padding:12px 14px;
-      color: rgba(255,255,255,.72); font-weight:600;
-      background: rgba(255,255,255,.04);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-    tbody td{
-      padding:12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.07);
-      color: rgba(255,255,255,.88);
-      vertical-align: top;
-    }
-    tbody tr:last-child td{ border-bottom:none; }
-    .pill{
-      display:inline-flex; align-items:center; gap:6px;
-      padding:4px 10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      font-size:12px; color: rgba(255,255,255,.80);
-      white-space:nowrap;
-    }
-    .muted{ color: rgba(255,255,255,.60); }
-    .msg{ max-width:520px; color: rgba(255,255,255,.78); line-height:1.35; }
 
-    @media (max-width: 920px){
-      .layout{ grid-template-columns: 1fr; }
-      .sidebar{
-        position:fixed; inset:0 auto 0 0;
-        width:280px;
-        transform: translateX(-110%);
-        transition: transform .18s ease;
-        z-index:30;
-      }
-      .sidebar.open{ transform: translateX(0); }
-      .mobileBtn{ display:inline-flex; }
-      .grid{ grid-template-columns: 1fr; }
-      .overlay{
-        display:none; position:fixed; inset:0;
-        background: rgba(0,0,0,.55);
-        z-index:20;
-      }
-      .overlay.open{ display:block; }
-      .main{ padding:16px 14px calc(16px + env(safe-area-inset-bottom)); }
+    th,td{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      text-align:left;
+    }
+
+    th{
+      color:rgba(255,255,255,.65);
+      font-weight:600;
+    }
+
+    tr:last-child td{ border-bottom:none; }
+
+    .muted{ color:rgba(255,255,255,.6); }
+
+    @media(max-width:900px){
+      .layout{ grid-template-columns:1fr; }
+      .sidebar{ display:none; }
     }
   </style>
 </head>
 
 <body>
   <div class="layout">
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar">
       <div class="brand">
-        <img id="brandLogo" class="logo" src="assets/logo.png?v=1" alt="" decoding="async" loading="eager">
+        <img src="assets/logo.png?v=1" class="logo" id="logo">
       </div>
 
       <nav class="nav">
-        <a class="active" href="dashboard.html"><span class="dot"></span> Dashboard</a>
-        <a href="send.html"><span class="dot"></span> Bildirim Gönder</a>
-        <a href="campaigns.html"><span class="dot"></span> Kampanyalar</a>
-        <a href="users.html"><span class="dot"></span> Kullanıcılar</a>
-        <a href="profile.html"><span class="dot"></span> Profil</a>
+        <a class="active" href="dashboard.html">Dashboard</a>
+        <a href="send.html">Bildirim Gönder</a>
+        <a href="campaigns.html">Kampanyalar</a>
+        <a href="users.html">Kullanıcılar</a>
+        <a href="profile.html">Profil</a>
       </nav>
 
       <div class="spacer"></div>
-      <button class="logout" id="logoutBtn">Çıkış Yap</button>
+      <button class="logout" onclick="logout()">Çıkış Yap</button>
     </aside>
 
-    <div class="overlay" id="overlay"></div>
-
     <main class="main">
-      <div class="topbar">
-        <div>
-          <h1 class="title">Dashboard</h1>
-          <div class="subtitle">Genel durum ve son kampanyalar</div>
+      <h1 class="title">Dashboard</h1>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat">
+          <div class="statLabel">Toplam İndirme</div>
+          <div class="statValue" id="totalDevices">0</div>
         </div>
-        <button class="mobileBtn" id="menuBtn">Menü</button>
+        <div class="stat">
+          <div class="statLabel">Bildirimleri Açık Kullanıcı</div>
+          <div class="statValue" id="pushEnabled">0</div>
+        </div>
       </div>
 
-      <div class="grid">
-        <section class="card">
-          <div class="metricLabel">Toplam indirme</div>
-          <p class="metricValue" id="totalDownloads">—</p>
-          <div class="metricHint">Cihaz bazlı toplam kayıt</div>
-        </section>
-
-        <section class="card">
-          <div class="metricLabel">Bildirimleri aktif kullanıcı</div>
-          <p class="metricValue" id="pushEnabled">—</p>
-          <div class="metricHint">Bildirim izni açık olanlar</div>
-        </section>
-      </div>
-
-      <div class="sectionTitle">Son gönderilen kampanyalar (son 5)</div>
-      <div class="tableWrap">
+      <!-- Last campaigns -->
+      <div class="card">
+        <h3 class="muted" style="margin:0 0 10px;">Son Kampanyalar</h3>
         <table>
           <thead>
             <tr>
-              <th style="width:140px">Tür</th>
-              <th style="width:170px">Tarih</th>
-              <th style="width:220px">Başlık</th>
+              <th>Başlık</th>
               <th>Mesaj</th>
+              <th>Tarih</th>
             </tr>
           </thead>
-          <tbody id="recentBody"></tbody>
+          <tbody id="lastCampaigns"></tbody>
         </table>
       </div>
     </main>
   </div>
 
   <script>
-    // Auth guard (demo) - token yoksa login'e
-    if (localStorage.getItem("admin_demo_auth") !== "1") {
+    if(localStorage.getItem("admin_demo_auth")!=="1"){
       location.replace("index.html");
     }
 
-    // Logo flash fix
-    const brandLogo = document.getElementById("brandLogo");
-    brandLogo.addEventListener("load", () => brandLogo.style.visibility = "visible");
-    brandLogo.addEventListener("error", () => brandLogo.style.visibility = "hidden");
-
-    // Mobile menu
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
-    const menuBtn = document.getElementById("menuBtn");
-    function openMenu(){ sidebar.classList.add("open"); overlay.classList.add("open"); }
-    function closeMenu(){ sidebar.classList.remove("open"); overlay.classList.remove("open"); }
-    menuBtn.addEventListener("click", openMenu);
-    overlay.addEventListener("click", closeMenu);
-
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      localStorage.removeItem("admin_demo_auth");
-      location.replace("index.html");
-    });
-
-    // Demo data
-    const demo = {
-      totalDownloads: 12840,
-      pushEnabled: 9640,
-      recentCampaigns: [
-        { type: "Anında",   at: "2026-01-09 18:20", title: "Bonus Fırsatı", msg: "Sürpriz bonus hesabınıza tanımlandı." },
-        { type: "Zamanlı",  at: "2026-01-09 21:00", title: "Akşam Kampanyası", msg: "Bu akşam özel oranlar sizi bekliyor." },
-        { type: "Test",     at: "2026-01-08 16:12", title: "Test", msg: "Test bildirimi" },
-        { type: "Anında",   at: "2026-01-08 13:05", title: "Sürpriz", msg: "Sadece bugün geçerli fırsat!" },
-        { type: "Anında",   at: "2026-01-07 19:40", title: "Duyuru", msg: "Yeni kampanya aktif edildi." },
-      ]
+    document.getElementById("logo").onload=()=>{
+      document.getElementById("logo").style.visibility="visible";
     };
 
-    document.getElementById("totalDownloads").textContent = demo.totalDownloads.toLocaleString("tr-TR");
-    document.getElementById("pushEnabled").textContent = demo.pushEnabled.toLocaleString("tr-TR");
+    function logout(){
+      localStorage.removeItem("admin_demo_auth");
+      location.replace("index.html");
+    }
 
-    const tbody = document.getElementById("recentBody");
-    tbody.innerHTML = "";
-    demo.recentCampaigns.slice(0,5).forEach(c => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><span class="pill">${escapeHtml(c.type)}</span></td>
-        <td class="muted">${escapeHtml(c.at)}</td>
-        <td>${escapeHtml(c.title)}</td>
-        <td class="msg">${escapeHtml(c.msg)}</td>
-      `;
+    // DEMO DATA (API bağlanacak)
+    document.getElementById("totalDevices").textContent = "12.480";
+    document.getElementById("pushEnabled").textContent = "8.732";
+
+    const campaigns = [
+      {t:"Bonus", m:"Sürpriz bonus tanımlandı", d:"09.01.2026"},
+      {t:"Akşam", m:"Akşam oranları aktif", d:"08.01.2026"},
+      {t:"Hatırlatma", m:"Bugün son gün", d:"08.01.2026"},
+      {t:"Duyuru", m:"Yeni kampanya yayında", d:"07.01.2026"},
+      {t:"Test", m:"Test bildirimi", d:"06.01.2026"},
+    ];
+
+    const tbody=document.getElementById("lastCampaigns");
+    campaigns.forEach(c=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td>${c.t}</td><td class="muted">${c.m}</td><td class="muted">${c.d}</td>`;
       tbody.appendChild(tr);
     });
-
-    function escapeHtml(str){
-      return String(str ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
   </script>
 </body>
 </html>
