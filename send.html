@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Bildirim Gönder</title>
 
+  <script>
+  // Tek yerden API
+  window.API_BASE = "https://api.mybetapp.io";
+
+  // admin.mybetapp.io -> app.mybetapp.io (tenant host)
+  window.TENANT_HOST = (() => {
+    const h = (location.hostname || "").toLowerCase();
+    const root = h.replace(/^admin\./, "");
+    return "app." + root;
+  })();
+</script>
+
   <meta name="theme-color" content="#0b0b0c" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
