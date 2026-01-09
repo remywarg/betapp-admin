@@ -10,9 +10,13 @@
     :root{
       --bg:#070708;
       --panel: rgba(25,25,27,.78);
+      --panel2: rgba(35,35,38,.72);
       --border: rgba(255,255,255,.10);
       --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.55);
+      --muted: rgba(255,255,255,.58);
+      --muted2: rgba(255,255,255,.42);
+      --btn: rgba(255,255,255,.10);
+      --btnHover: rgba(255,255,255,.14);
       --shadow: 0 28px 90px rgba(0,0,0,.55);
     }
 
@@ -21,233 +25,279 @@
     body{
       margin:0;
       font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui;
-      background:
-        radial-gradient(1100px 700px at 50% 25%, rgba(255,255,255,.08), transparent 60%),
-        linear-gradient(180deg, var(--bg), #000);
+      background: radial-gradient(1100px 700px at 50% 25%, rgba(255,255,255,.08), transparent 60%),
+                  linear-gradient(180deg, var(--bg), #000);
       color: var(--text);
+      overflow-x:hidden;
     }
 
-    .layout{
-      min-height:100vh;
-      display:grid;
-      grid-template-columns:280px 1fr;
-    }
+    .layout{ min-height:100vh; display:grid; grid-template-columns: 280px 1fr; }
 
-    /* Sidebar */
+    /* Sidebar (diğer sayfalarla aynı) */
     .sidebar{
-      position:sticky;
-      top:0;
-      height:100vh;
-      padding:18px 14px;
-      background:rgba(10,10,11,.55);
+      position:sticky; top:0; height:100vh;
+      padding: 18px 14px calc(18px + env(safe-area-inset-bottom));
+      border-right: 1px solid rgba(255,255,255,.08);
+      background: rgba(10,10,11,.55);
       backdrop-filter: blur(18px);
-      border-right:1px solid rgba(255,255,255,.08);
     }
-
     .brand{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:56px;
-      margin-bottom:16px;
+      display:flex; align-items:center; justify-content:center;
+      height:56px; margin: 6px 0 16px; user-select:none;
     }
+    .logo{ width:140px; height:48px; object-fit:contain; display:block; visibility:hidden; }
 
-    .logo{
-      width:140px;
-      height:48px;
-      object-fit:contain;
-      visibility:hidden;
-    }
-
-    .nav{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-
+    .nav{ display:flex; flex-direction:column; gap:6px; margin-top:10px; }
     .nav a{
-      padding:10px 12px;
-      border-radius:14px;
-      text-decoration:none;
-      color:rgba(255,255,255,.82);
-      font-size:14px;
-      font-weight:500;
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:14px;
+      text-decoration:none; color: rgba(255,255,255,.82);
+      border:1px solid transparent; background:transparent;
+      font-size:14px; font-weight:500;
     }
-
-    .nav a.active{
-      background:rgba(255,255,255,.09);
-    }
+    .nav a:hover{ background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.08); }
+    .nav a.active{ background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.10); }
+    .dot{ width:7px; height:7px; border-radius:99px; background: rgba(255,255,255,.35); }
+    .nav a.active .dot{ background: rgba(255,255,255,.78); }
 
     .spacer{ flex:1; }
-
     .logout{
-      margin-top:16px;
-      width:100%;
-      padding:10px 12px;
-      border-radius:14px;
+      margin-top:14px; width:100%;
+      padding:10px 12px; border-radius:14px;
       border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.06);
-      color:rgba(255,255,255,.82);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.82);
+      font-size:14px; font-weight:500;
+      cursor:pointer;
+    }
+    .logout:hover{ background: rgba(255,255,255,.10); }
+
+    /* Mobile drawer (diğer sayfalarla aynı) */
+    .overlay{
+      display:none; position:fixed; inset:0;
+      background: rgba(0,0,0,.55); z-index: 20;
+    }
+    .overlay.open{ display:block; }
+
+    .main{ padding:18px 18px calc(18px + env(safe-area-inset-bottom)); }
+    .topbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; }
+    .title{ font-size:18px; font-weight:650; margin:0; letter-spacing:.2px; }
+    .subtitle{ margin-top:4px; font-size:13px; color: var(--muted); font-weight:500; }
+
+    .mobileBtn{
+      display:none;
+      padding:9px 12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.84);
+      font-size:14px; font-weight:500;
       cursor:pointer;
     }
 
-    /* Main */
-    .main{
-      padding:18px;
-    }
-
-    .title{
-      font-size:18px;
-      font-weight:650;
-      margin:0 0 16px;
-    }
-
-    .stats{
+    .grid{
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:14px;
-      margin-bottom:18px;
-    }
-
-    .stat{
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:22px;
-      padding:18px;
-      box-shadow:var(--shadow);
-    }
-
-    .statLabel{
-      font-size:13px;
-      color:var(--muted);
-      margin-bottom:6px;
-    }
-
-    .statValue{
-      font-size:28px;
-      font-weight:700;
-      letter-spacing:.3px;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items:start;
+      margin-top:12px;
     }
 
     .card{
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:22px;
-      padding:16px;
-      box-shadow:var(--shadow);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: 16px;
     }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:13.5px;
+    .statLabel{
+      font-size: 13px;
+      color: rgba(255,255,255,.55);
+      margin: 0 0 6px;
+      font-weight: 550;
+    }
+    .statValue{
+      font-size: 34px;
+      font-weight: 750;
+      letter-spacing: .2px;
+      margin: 0;
     }
 
-    th,td{
-      padding:10px 12px;
-      border-bottom:1px solid rgba(255,255,255,.08);
-      text-align:left;
+    .segTitle{
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0 0 10px;
+      color: rgba(255,255,255,.80);
     }
 
-    th{
-      color:rgba(255,255,255,.65);
-      font-weight:600;
+    .tableWrap{
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      overflow:hidden;
     }
+    table{ width:100%; border-collapse: collapse; font-size:13.5px; }
+    thead th{
+      text-align:left; padding:12px 14px;
+      color: rgba(255,255,255,.72); font-weight:600;
+      background: rgba(255,255,255,.04);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      white-space:nowrap;
+    }
+    tbody td{
+      padding:12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      color: rgba(255,255,255,.88);
+      vertical-align: top;
+      white-space:nowrap;
+    }
+    tbody tr:last-child td{ border-bottom:none; }
+    .muted{ color: rgba(255,255,255,.60); }
 
-    tr:last-child td{ border-bottom:none; }
+    @media (max-width: 920px){
+      .layout{ grid-template-columns: 1fr; }
+      .sidebar{
+        position:fixed; inset:0 auto 0 0;
+        width:280px;
+        transform: translateX(-110%);
+        transition: transform .18s ease;
+        z-index:30;
+      }
+      .sidebar.open{ transform: translateX(0); }
+      .mobileBtn{ display:inline-flex; }
+      .overlay.open{ display:block; }
+      .main{ padding:16px 14px calc(16px + env(safe-area-inset-bottom)); }
+      .grid{ grid-template-columns: 1fr; }
 
-    .muted{ color:rgba(255,255,255,.6); }
-
-    @media(max-width:900px){
-      .layout{ grid-template-columns:1fr; }
-      .sidebar{ display:none; }
+      thead{ display:none; }
+      tbody td{ display:block; padding:10px 14px; white-space:normal; }
+      tbody tr{ display:block; border-bottom: 1px solid rgba(255,255,255,.07); }
+      tbody tr:last-child{ border-bottom:none; }
     }
   </style>
 </head>
 
 <body>
   <div class="layout">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="brand">
-        <img src="assets/logo.png?v=1" class="logo" id="logo">
+        <img id="brandLogo" class="logo" src="assets/logo.png?v=1" alt="" decoding="async" loading="eager">
       </div>
 
       <nav class="nav">
-        <a class="active" href="dashboard.html">Dashboard</a>
-        <a href="send.html">Bildirim Gönder</a>
-        <a href="campaigns.html">Kampanyalar</a>
-        <a href="users.html">Kullanıcılar</a>
-        <a href="profile.html">Profil</a>
+        <a class="active" href="dashboard.html"><span class="dot"></span> Dashboard</a>
+        <a href="send.html"><span class="dot"></span> Bildirim Gönder</a>
+        <a href="campaigns.html"><span class="dot"></span> Kampanyalar</a>
+        <a href="users.html"><span class="dot"></span> Kullanıcılar</a>
+        <a href="profile.html"><span class="dot"></span> Profil</a>
       </nav>
 
       <div class="spacer"></div>
-      <button class="logout" onclick="logout()">Çıkış Yap</button>
+      <button class="logout" id="logoutBtn">Çıkış Yap</button>
     </aside>
 
+    <div class="overlay" id="overlay"></div>
+
     <main class="main">
-      <h1 class="title">Dashboard</h1>
-
-      <!-- Stats -->
-      <div class="stats">
-        <div class="stat">
-          <div class="statLabel">Toplam İndirme</div>
-          <div class="statValue" id="totalDevices">0</div>
+      <div class="topbar">
+        <div>
+          <h1 class="title">Dashboard</h1>
+          <div class="subtitle">Özet rapor</div>
         </div>
-        <div class="stat">
-          <div class="statLabel">Bildirimleri Açık Kullanıcı</div>
-          <div class="statValue" id="pushEnabled">0</div>
-        </div>
+        <button class="mobileBtn" id="menuBtn">Menü</button>
       </div>
 
-      <!-- Last campaigns -->
-      <div class="card">
-        <h3 class="muted" style="margin:0 0 10px;">Son Kampanyalar</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Başlık</th>
-              <th>Mesaj</th>
-              <th>Tarih</th>
-            </tr>
-          </thead>
-          <tbody id="lastCampaigns"></tbody>
-        </table>
+      <div class="grid">
+        <section class="card">
+          <div class="statLabel">Toplam indirme</div>
+          <p class="statValue" id="totalDevices">0</p>
+        </section>
+
+        <section class="card">
+          <div class="statLabel">Bildirimleri açık kullanıcı</div>
+          <p class="statValue" id="pushEnabled">0</p>
+        </section>
       </div>
+
+      <div style="height:12px;"></div>
+
+      <section class="card">
+        <div class="segTitle">Son kampanyalar</div>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:140px">Tarih</th>
+                <th style="width:140px">Tür</th>
+                <th style="width:220px">Başlık</th>
+                <th>Mesaj</th>
+              </tr>
+            </thead>
+            <tbody id="lastCampaigns"></tbody>
+          </table>
+        </div>
+      </section>
     </main>
   </div>
 
   <script>
-    if(localStorage.getItem("admin_demo_auth")!=="1"){
-      location.replace("index.html");
-    }
+    // Auth guard (demo)
+    if (localStorage.getItem("admin_demo_auth") !== "1") location.replace("index.html");
 
-    document.getElementById("logo").onload=()=>{
-      document.getElementById("logo").style.visibility="visible";
-    };
+    // Logo
+    const brandLogo = document.getElementById("brandLogo");
+    brandLogo.addEventListener("load", () => brandLogo.style.visibility = "visible");
+    brandLogo.addEventListener("error", () => brandLogo.style.visibility = "hidden");
 
-    function logout(){
+    // Mobile menu
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const menuBtn = document.getElementById("menuBtn");
+    function openMenu(){ sidebar.classList.add("open"); overlay.classList.add("open"); }
+    function closeMenu(){ sidebar.classList.remove("open"); overlay.classList.remove("open"); }
+    menuBtn.addEventListener("click", openMenu);
+    overlay.addEventListener("click", closeMenu);
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
       localStorage.removeItem("admin_demo_auth");
       location.replace("index.html");
-    }
+    });
 
-    // DEMO DATA (API bağlanacak)
+    // DEMO DATA (API bağlanınca burası gerçek data olacak)
     document.getElementById("totalDevices").textContent = "12.480";
     document.getElementById("pushEnabled").textContent = "8.732";
 
     const campaigns = [
-      {t:"Bonus", m:"Sürpriz bonus tanımlandı", d:"09.01.2026"},
-      {t:"Akşam", m:"Akşam oranları aktif", d:"08.01.2026"},
-      {t:"Hatırlatma", m:"Bugün son gün", d:"08.01.2026"},
-      {t:"Duyuru", m:"Yeni kampanya yayında", d:"07.01.2026"},
-      {t:"Test", m:"Test bildirimi", d:"06.01.2026"},
+      { type:"Anında",  title:"Bonus",     body:"Sürpriz bonus tanımlandı",         date:"2026-01-09 18:20" },
+      { type:"Anında",  title:"Akşam",     body:"Akşam kampanyası başladı",         date:"2026-01-09 17:10" },
+      { type:"Zamanlı", title:"Hatırlatma",body:"Bugün son gün",                    date:"2026-01-09 14:05" },
+      { type:"Anında",  title:"Duyuru",    body:"Yeni kampanya yayında",            date:"2026-01-08 21:30" },
+      { type:"Test",    title:"Test",      body:"Test bildirimi",                  date:"2026-01-08 16:12" },
     ];
 
-    const tbody=document.getElementById("lastCampaigns");
-    campaigns.forEach(c=>{
-      const tr=document.createElement("tr");
-      tr.innerHTML=`<td>${c.t}</td><td class="muted">${c.m}</td><td class="muted">${c.d}</td>`;
+    const tbody = document.getElementById("lastCampaigns");
+    tbody.innerHTML = "";
+    campaigns.slice(0,5).forEach(c => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="muted">${escapeHtml(c.date)}</td>
+        <td class="muted">${escapeHtml(c.type)}</td>
+        <td>${escapeHtml(c.title)}</td>
+        <td class="muted">${escapeHtml(c.body)}</td>
+      `;
       tbody.appendChild(tr);
     });
+
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
   </script>
 </body>
 </html>
