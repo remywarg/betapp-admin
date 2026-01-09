@@ -1,1 +1,431 @@
 
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>BetApp • Admin</title>
+
+  <meta name="theme-color" content="#0b0b0c" />
+  <style>
+    :root{
+      --bg:#070708;
+      --panel: rgba(25,25,27,.78);
+      --panel2: rgba(35,35,38,.72);
+      --border: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.58);
+      --muted2: rgba(255,255,255,.42);
+      --btn: rgba(255,255,255,.10);
+      --btnHover: rgba(255,255,255,.14);
+      --shadow: 0 28px 90px rgba(0,0,0,.55);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,Segoe UI,Roboto,Arial;
+      background: radial-gradient(1100px 700px at 50% 25%, rgba(255,255,255,.08), transparent 60%),
+                  linear-gradient(180deg, var(--bg), #000);
+      color: var(--text);
+      overflow-x:hidden;
+    }
+
+    /* Layout */
+    .layout{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    /* Sidebar */
+    .sidebar{
+      position:sticky;
+      top:0;
+      height:100vh;
+      padding: 18px 14px calc(18px + env(safe-area-inset-bottom));
+      border-right: 1px solid rgba(255,255,255,.08);
+      background: rgba(10,10,11,.55);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:56px;
+      margin: 6px 0 16px;
+      user-select:none;
+    }
+    .logo{
+      width:140px;
+      height:48px;
+      object-fit:contain;
+      display:block;
+      visibility:hidden; /* load olunca açacağız */
+    }
+
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .nav a{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      text-decoration:none;
+      color: rgba(255,255,255,.82);
+      border: 1px solid transparent;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .nav a:hover{
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.08);
+    }
+    .nav a.active{
+      background: rgba(255,255,255,.09);
+      border-color: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.92);
+    }
+
+    .nav .dot{
+      width: 7px;
+      height: 7px;
+      border-radius: 99px;
+      background: rgba(255,255,255,.35);
+      flex: 0 0 7px;
+    }
+    .nav a.active .dot{ background: rgba(255,255,255,.78); }
+
+    .spacer{ flex:1; }
+    .logout{
+      margin-top: 14px;
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.82);
+      font-size: 14px;
+      font-weight: 500;
+      cursor:pointer;
+    }
+    .logout:hover{ background: rgba(255,255,255,.10); }
+
+    /* Main */
+    .main{
+      padding: 18px 18px calc(18px + env(safe-area-inset-bottom));
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .title{
+      font-size: 18px;
+      font-weight: 650;
+      letter-spacing: .2px;
+      margin: 0;
+    }
+    .subtitle{
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .mobileBtn{
+      display:none;
+      padding: 9px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.84);
+      font-size: 14px;
+      font-weight: 500;
+      cursor:pointer;
+    }
+
+    /* Cards */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .card{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      padding: 16px;
+    }
+
+    .metricLabel{
+      color: var(--muted);
+      font-size: 12.8px;
+      font-weight: 500;
+      margin: 0 0 8px 0;
+    }
+    .metricValue{
+      font-size: 28px;
+      font-weight: 650;
+      margin: 0;
+      letter-spacing: .2px;
+    }
+    .metricHint{
+      margin-top: 8px;
+      font-size: 12.5px;
+      color: var(--muted2);
+    }
+
+    /* Recent campaigns */
+    .sectionTitle{
+      margin: 18px 0 10px;
+      font-size: 14px;
+      font-weight: 650;
+      color: rgba(255,255,255,.88);
+      letter-spacing: .2px;
+    }
+
+    .tableWrap{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    thead th{
+      text-align:left;
+      padding: 12px 14px;
+      color: rgba(255,255,255,.72);
+      font-weight: 600;
+      background: rgba(255,255,255,.04);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    tbody td{
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      color: rgba(255,255,255,.88);
+      vertical-align: top;
+    }
+    tbody tr:last-child td{ border-bottom: none; }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      color: rgba(255,255,255,.80);
+      white-space: nowrap;
+    }
+
+    .muted{ color: rgba(255,255,255,.60); }
+    .msg{
+      max-width: 520px;
+      color: rgba(255,255,255,.78);
+      line-height: 1.35;
+    }
+
+    /* Mobile */
+    @media (max-width: 920px){
+      .layout{ grid-template-columns: 1fr; }
+      .sidebar{
+        position:fixed;
+        inset: 0 auto 0 0;
+        width: 280px;
+        transform: translateX(-110%);
+        transition: transform .18s ease;
+        z-index: 30;
+        border-right: 1px solid rgba(255,255,255,.10);
+      }
+      .sidebar.open{ transform: translateX(0); }
+      .main{ padding: 16px 14px calc(16px + env(safe-area-inset-bottom)); }
+      .mobileBtn{ display:inline-flex; }
+      .grid{ grid-template-columns: 1fr; }
+      .overlay{
+        display:none;
+        position:fixed;
+        inset:0;
+        background: rgba(0,0,0,.55);
+        z-index: 20;
+      }
+      .overlay.open{ display:block; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img id="brandLogo" class="logo" src="/assets/logo.png?v=1" alt="" decoding="async" loading="eager">
+      </div>
+
+      <nav class="nav" aria-label="Menü">
+        <a class="active" href="/dashboard.html"><span class="dot"></span> Dashboard</a>
+        <a href="/send.html"><span class="dot"></span> Bildirim Gönder</a>
+        <a href="/campaigns.html"><span class="dot"></span> Kampanyalar</a>
+        <a href="/users.html"><span class="dot"></span> Kullanıcılar</a>
+        <a href="/profile.html"><span class="dot"></span> Profil</a>
+      </nav>
+
+      <div class="spacer"></div>
+
+      <button class="logout" id="logoutBtn">Çıkış Yap</button>
+    </aside>
+
+    <!-- Mobile overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1 class="title">Dashboard</h1>
+          <div class="subtitle">Genel durum ve son kampanyalar</div>
+        </div>
+        <button class="mobileBtn" id="menuBtn">Menü</button>
+      </div>
+
+      <!-- Metrics -->
+      <div class="grid">
+        <section class="card" aria-label="Toplam indirme">
+          <div class="metricLabel">Toplam indirme</div>
+          <p class="metricValue" id="totalDownloads">—</p>
+          <div class="metricHint">Cihaz bazlı toplam kayıt</div>
+        </section>
+
+        <section class="card" aria-label="Bildirim aktif kullanıcı">
+          <div class="metricLabel">Bildirimleri aktif kullanıcı</div>
+          <p class="metricValue" id="pushEnabled">—</p>
+          <div class="metricHint">Bildirim izni açık olanlar</div>
+        </section>
+      </div>
+
+      <!-- Recent campaigns -->
+      <div class="sectionTitle">Son gönderilen kampanyalar (son 5)</div>
+      <div class="tableWrap" role="region" aria-label="Son kampanyalar">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:140px">Tür</th>
+              <th style="width:170px">Tarih</th>
+              <th style="width:220px">Başlık</th>
+              <th>Mesaj</th>
+            </tr>
+          </thead>
+          <tbody id="recentBody">
+            <!-- JS dolduracak -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ---- Auth guard (demo) ----
+    if (localStorage.getItem("admin_demo_auth") !== "1") {
+      location.replace("/index.html");
+    }
+
+    // ---- Logo flash fix ----
+    const brandLogo = document.getElementById("brandLogo");
+    brandLogo.addEventListener("load", () => brandLogo.style.visibility = "visible");
+    brandLogo.addEventListener("error", () => brandLogo.style.visibility = "hidden");
+
+    // ---- Mobile menu ----
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const menuBtn = document.getElementById("menuBtn");
+
+    function openMenu(){
+      sidebar.classList.add("open");
+      overlay.classList.add("open");
+    }
+    function closeMenu(){
+      sidebar.classList.remove("open");
+      overlay.classList.remove("open");
+    }
+    menuBtn.addEventListener("click", openMenu);
+    overlay.addEventListener("click", closeMenu);
+
+    // ---- Logout ----
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("admin_demo_auth");
+      location.replace("/index.html");
+    });
+
+    // ---- Demo data (şimdilik) ----
+    // Sonra API bağlayacağız:
+    // GET /api/admin/dashboard -> { totalDownloads, pushEnabled, recentCampaigns: [...] }
+    const demo = {
+      totalDownloads: 12840,
+      pushEnabled: 9640,
+      recentCampaigns: [
+        { type: "Anında",   at: "2026-01-09 18:20", title: "Bonus Fırsatı", msg: "Sürpriz bonus hesabınıza tanımlandı." },
+        { type: "Zamanlı",  at: "2026-01-09 21:00", title: "Akşam Kampanyası", msg: "Bu akşam özel oranlar sizi bekliyor." },
+        { type: "Test",     at: "2026-01-08 16:12", title: "Test", msg: "Test bildirimi" },
+        { type: "Anında",   at: "2026-01-08 13:05", title: "Sürpriz", msg: "Sadece bugün geçerli fırsat!" },
+        { type: "Anında",   at: "2026-01-07 19:40", title: "Duyuru", msg: "Yeni kampanya aktif edildi." },
+      ]
+    };
+
+    // Render metrics
+    document.getElementById("totalDownloads").textContent = demo.totalDownloads.toLocaleString("tr-TR");
+    document.getElementById("pushEnabled").textContent = demo.pushEnabled.toLocaleString("tr-TR");
+
+    // Render recent campaigns
+    const tbody = document.getElementById("recentBody");
+    tbody.innerHTML = "";
+    demo.recentCampaigns.slice(0,5).forEach(c => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><span class="pill">${c.type}</span></td>
+        <td class="muted">${c.at}</td>
+        <td>${escapeHtml(c.title)}</td>
+        <td class="msg">${escapeHtml(c.msg)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+  </script>
+</body>
+</html>
