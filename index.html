@@ -1,8 +1,233 @@
 <!doctype html>
-<html>
-  <head><meta charset="utf-8"><title>BetApp Admin</title></head>
-  <body>
-    <h1>BetApp Admin OK</h1>
-    <p>admin.mybetapp.io çalışıyor.</p>
-  </body>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>BetApp • Admin</title>
+
+  <meta name="theme-color" content="#0b0b0c" />
+  <style>
+    :root{
+      --bg:#070708;
+      --panel: rgba(25,25,27,.78);
+      --panel2: rgba(35,35,38,.72);
+      --border: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.58);
+      --muted2: rgba(255,255,255,.42);
+      --btn: rgba(255,255,255,.10);
+      --btnHover: rgba(255,255,255,.14);
+      --danger: rgba(255,90,90,.9);
+      --ok: rgba(120,255,180,.85);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,Segoe UI,Roboto,Arial;
+      background: radial-gradient(1100px 700px at 50% 25%, rgba(255,255,255,.08), transparent 60%),
+                  linear-gradient(180deg, var(--bg), #000);
+      color: var(--text);
+      overflow:hidden;
+    }
+
+    .wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 18px 16px calc(18px + env(safe-area-inset-bottom));
+    }
+
+    .card{
+      width:100%;
+      max-width: 420px;
+      background: var(--panel);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      box-shadow: 0 28px 90px rgba(0,0,0,.55);
+      padding: 22px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      margin-bottom: 14px;
+      user-select:none;
+    }
+    .logo{
+      width: 140px; /* ince-uzun */
+      height: auto;
+      max-height: 48px;
+      display:block;
+    }
+
+    .subtitle{
+      text-align:center;
+      color: var(--muted);
+      font-size: 13.5px;
+      margin: 2px 0 18px;
+      letter-spacing:.2px;
+    }
+
+    .group{ margin-bottom: 12px; }
+    label{
+      display:block;
+      font-size: 12.5px;
+      color: var(--muted2);
+      margin: 0 0 6px;
+    }
+
+    .input{
+      width:100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+    .input::placeholder{ color: rgba(255,255,255,.30); }
+
+    /* iOS zoom olmasın */
+    @supports (-webkit-touch-callout: none){
+      .input{ font-size:16px; }
+    }
+
+    .row{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-top: 10px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--btn);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 650;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:hover{ background: var(--btnHover); }
+    .btn:active{ transform: scale(.98); }
+
+    .link{
+      color: rgba(255,255,255,.70);
+      font-size: 13px;
+      text-decoration: none;
+    }
+    .link:hover{ text-decoration: underline; }
+
+    .msg{
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.35;
+      display:none;
+    }
+    .msg.ok{ color: var(--ok); }
+    .msg.err{ color: var(--danger); }
+
+    .foot{
+      margin-top: 14px;
+      text-align:center;
+      color: rgba(255,255,255,.35);
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-label="Admin Girişi">
+
+      <div class="brand">
+        <!-- Admin panelde logo -->
+        <img class="logo" src="/assets/logo.png?v=1" alt="Logo" onerror="this.style.display='none'">
+      </div>
+
+      <div class="subtitle">Firma yönetim paneli</div>
+
+      <form id="loginForm" autocomplete="on">
+        <div class="group">
+          <label for="email">E-posta</label>
+          <input class="input" id="email" type="email" placeholder="ornek@firma.com" autocomplete="email" required>
+        </div>
+
+        <div class="group">
+          <label for="password">Şifre</label>
+          <input class="input" id="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+
+        <div class="group">
+          <label for="totp">2FA Kodu</label>
+          <input class="input" id="totp" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="6 haneli kod" autocomplete="one-time-code" required>
+        </div>
+
+        <div class="row">
+          <a class="link" href="#" id="forgot">Şifremi unuttum</a>
+          <button class="btn" type="submit">Giriş Yap</button>
+        </div>
+
+        <div class="msg ok" id="okMsg">Giriş başarılı. Yönlendiriliyor…</div>
+        <div class="msg err" id="errMsg">Hatalı bilgi. Lütfen tekrar deneyin.</div>
+      </form>
+
+      <div class="foot">© BetApp</div>
+    </div>
+  </div>
+
+  <script>
+    // Demo: Şimdilik sahte login.
+    // Sonra API bağlayacağız: POST /api/admin/login
+    const form = document.getElementById("loginForm");
+    const okMsg = document.getElementById("okMsg");
+    const errMsg = document.getElementById("errMsg");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      okMsg.style.display = "none";
+      errMsg.style.display = "none";
+
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const pass  = document.getElementById("password").value;
+      const totp  = document.getElementById("totp").value.trim();
+
+      // Demo kabul: email boş değil, şifre >= 6, totp 6 hane
+      const ok = email.includes("@") && pass.length >= 6 && /^\d{6}$/.test(totp);
+
+      if(ok){
+        okMsg.style.display = "block";
+        // demo token
+        localStorage.setItem("admin_demo_auth", "1");
+        setTimeout(() => {
+          // bir sonraki adımda dashboard.html yapacağız
+          location.href = "/dashboard.html";
+        }, 700);
+      } else {
+        errMsg.style.display = "block";
+      }
+    });
+
+    document.getElementById("forgot").addEventListener("click", (e) => {
+      e.preventDefault();
+      alert("Demo: Şifre sıfırlama daha sonra eklenecek.");
+    });
+  </script>
+</body>
 </html>
