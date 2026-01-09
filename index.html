@@ -12,7 +12,6 @@
       --panel: rgba(25,25,27,.78);
       --border: rgba(255,255,255,.10);
       --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.58);
       --muted2: rgba(255,255,255,.42);
       --btn: rgba(255,255,255,.10);
       --btnHover: rgba(255,255,255,.14);
@@ -55,10 +54,15 @@
       justify-content:center;
       margin-bottom:18px;
       user-select:none;
+      min-height:48px; /* yüklenirken zıplamasın */
     }
+
+    /* img gelmese bile yerini koru */
     .logo{
       width:140px;
-      max-height:48px;
+      height:48px;
+      object-fit:contain;
+      display:block;
     }
 
     .group{ margin-bottom:12px; }
@@ -82,7 +86,6 @@
     }
     .input::placeholder{ color:rgba(255,255,255,.30); }
 
-    /* iOS zoom engeli */
     @supports (-webkit-touch-callout:none){
       .input{ font-size:16px; }
     }
@@ -132,8 +135,12 @@
     <div class="card">
 
       <div class="brand">
-        <img class="logo" src="/assets/logo.png?v=1" alt="Logo"
-             onerror="this.style.display='none'">
+        <img class="logo"
+             src="/assets/logo.png?v=2"
+             alt=""
+             loading="eager"
+             decoding="async"
+             onerror="this.style.visibility='hidden'">
       </div>
 
       <form id="loginForm">
@@ -190,15 +197,12 @@
       const pass = document.getElementById("password").value;
       const totp = document.getElementById("totp").value.trim();
 
-      // DEMO kontrol
       const ok = user.length >= 3 && pass.length >= 6 && /^\d{6}$/.test(totp);
 
       if(ok){
         okMsg.style.display = "block";
         localStorage.setItem("admin_demo_auth","1");
-        setTimeout(()=>{
-          location.href="/dashboard.html";
-        },700);
+        setTimeout(()=> location.href="/dashboard.html", 700);
       }else{
         errMsg.style.display = "block";
       }
