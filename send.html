@@ -20,6 +20,7 @@
   <meta name="theme-color" content="#0b0b0c" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
 
   <style>
     :root{
@@ -38,7 +39,6 @@
       --shadow: 0 28px 90px rgba(0,0,0,.55);
       --radius: 22px;
     }
-
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
     html{ background: var(--bg); overscroll-behavior:none; }
@@ -50,27 +50,28 @@
         radial-gradient(900px 560px at 50% 85%, rgba(255,255,255,.06), transparent 60%),
         linear-gradient(180deg, #09090a, #000);
     }
-
-    /* Layout (sol menü + içerik) */
     .layout{
       min-height:100vh;
       display:grid;
       grid-template-columns: 280px 1fr;
     }
-
     aside{
       padding: 18px;
       border-right: 1px solid rgba(255,255,255,.08);
       background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,0));
     }
-
+    .brand{
+      font-weight:800;font-size:18px; letter-spacing:.2px;
+    }
+    .brandSub{
+      color:rgba(255,255,255,.52); font-size:12px; margin-top:6px;
+    }
     .nav{
       margin-top: 12px;
       display:flex;
       flex-direction:column;
       gap: 10px;
     }
-
     .nav a{
       text-decoration:none;
       color: rgba(255,255,255,.86);
@@ -81,22 +82,18 @@
       align-items:center;
       gap: 10px;
     }
-
     .nav a.active{
       background: rgba(255,255,255,.06);
       border-color: rgba(255,255,255,.10);
       box-shadow: 0 10px 40px rgba(0,0,0,.35);
     }
-
     .logout{
       margin-top: 16px;
       width: 100%;
     }
-
     main{
       padding: 26px 24px calc(26px + env(safe-area-inset-bottom));
     }
-
     .title{
       font-size: 28px;
       font-weight: 720;
@@ -108,7 +105,6 @@
       color: var(--muted);
       font-size: 14px;
     }
-
     .card{
       background: var(--panel);
       border: 1px solid var(--border);
@@ -119,27 +115,23 @@
       padding: 18px;
       max-width: 980px;
     }
-
     .row{
       display:flex;
-      align-items:center;
+      align-items:flex-end;
       justify-content:space-between;
       gap: 12px;
       flex-wrap: wrap;
     }
-
     .label{
       font-size: 13px;
       color: var(--muted);
       margin: 0 0 8px 0;
     }
-
     .seg{
       display:flex;
       gap: 10px;
       flex-wrap: wrap;
     }
-
     .chip{
       padding: 8px 14px;
       border-radius: 999px;
@@ -155,7 +147,6 @@
       background: rgba(255,255,255,.12);
       border-color: rgba(255,255,255,.16);
     }
-
     .field{
       width: 100%;
       padding: 12px 14px;
@@ -168,19 +159,13 @@
       font-weight: 520;
     }
     .field::placeholder{ color: var(--muted2); }
-
-    textarea.field{
-      min-height: 120px;
-      resize: vertical;
-    }
-
+    textarea.field{ min-height: 120px; resize: vertical; }
     .counter{
       margin-top: 8px;
       color: var(--muted2);
       font-size: 12px;
       text-align:right;
     }
-
     .actions{
       display:flex;
       gap: 10px;
@@ -188,7 +173,6 @@
       margin-top: 14px;
       flex-wrap: wrap;
     }
-
     .btn{
       display:inline-flex;
       align-items:center;
@@ -205,12 +189,10 @@
       -webkit-tap-highlight-color: transparent;
     }
     .btn:active{ transform: scale(.98); }
-
     .btn.primary{
       background: rgba(255,255,255,.14);
       border-color: rgba(255,255,255,.18);
     }
-
     .status{
       margin-top: 12px;
       font-size: 13px;
@@ -234,7 +216,6 @@
       z-index: 50;
     }
     .modalBack.show{ display:flex; }
-
     .modal{
       width: 100%;
       max-width: 560px;
@@ -278,15 +259,15 @@
 <body>
   <div class="layout">
     <aside>
-      <div style="font-weight:800;font-size:18px; letter-spacing:.2px;">BetApp Admin</div>
-      <div style="color:rgba(255,255,255,.52); font-size:12px; margin-top:6px;">Panel</div>
+      <div class="brand">BetApp Admin</div>
+      <div class="brandSub">Panel</div>
 
-      <nav class="nav" aria-label="Menü">
-        <a href="dashboard.html">Dashboard</a>
-        <a class="active" href="send.html">Bildirim Gönder</a>
-        <a href="campaigns.html">Kampanyalar</a>
-        <a href="users.html">Kullanıcılar</a>
-        <a href="profile.html">Profil</a>
+      <nav class="nav" aria-label="Menü" id="nav">
+        <a href="dashboard.html" data-page="dashboard.html">Dashboard</a>
+        <a href="send.html" data-page="send.html">Bildirim Gönder</a>
+        <a href="campaigns.html" data-page="campaigns.html">Kampanyalar</a>
+        <a href="users.html" data-page="users.html">Kullanıcılar</a>
+        <a href="profile.html" data-page="profile.html">Profil</a>
       </nav>
 
       <button class="btn logout" id="btnLogout">Çıkış Yap</button>
@@ -294,11 +275,11 @@
 
     <main>
       <h1 class="title">Bildirim Gönder</h1>
-      <p class="sub">Anında · Zamanlı · Test gönderim</p>
+      <p class="sub">Anında · Zamanlı · Test (kullanıcı seç)</p>
 
       <div class="card">
         <div class="row" style="margin-bottom: 12px;">
-          <div style="min-width:220px;">
+          <div style="min-width:260px;">
             <div class="label">Gönderim türü</div>
             <div class="seg">
               <div class="chip active" data-mode="now">Anında</div>
@@ -307,9 +288,17 @@
             </div>
           </div>
 
-          <div id="scheduledWrap" style="min-width:240px; display:none;">
+          <div id="scheduledWrap" style="min-width:260px; display:none;">
             <div class="label">Tarih / Saat</div>
             <input class="field" id="scheduledAt" type="datetime-local" />
+          </div>
+
+          <div id="testWrap" style="min-width:260px; display:none;">
+            <div class="label">Test kullanıcı seç</div>
+            <select class="field" id="testUser">
+              <option value="">Yükleniyor...</option>
+            </select>
+            <div class="counter" style="text-align:left">Sadece seçilen kullanıcıya gönderir.</div>
           </div>
         </div>
 
@@ -345,6 +334,11 @@
         <div class="v" id="pvMode">—</div>
       </div>
 
+      <div class="kv" id="pvTargetWrap" style="display:none;">
+        <div class="k">Hedef</div>
+        <div class="v" id="pvTarget">—</div>
+      </div>
+
       <div class="kv">
         <div class="k">Başlık</div>
         <div class="v" id="pvTitle">—</div>
@@ -370,6 +364,16 @@
 <script>
   // ---------- Helpers ----------
   function $(id){ return document.getElementById(id); }
+  const API_BASE = window.API_BASE;
+  const TENANT_HOST = window.TENANT_HOST;
+
+  // nav active
+  (function(){
+    const page = (location.pathname.split("/").pop() || "dashboard.html").toLowerCase();
+    document.querySelectorAll("#nav a").forEach(a=>{
+      a.classList.toggle("active", (a.dataset.page||"").toLowerCase() === page);
+    });
+  })();
 
   const statusEl = $("status");
   function setStatus(type, text){
@@ -381,35 +385,48 @@
     statusEl.textContent = "";
   }
 
-  // Tek kaynaktan host + api
-  function tenantHost(){ return window.TENANT_HOST; }
-  function apiBase(){ return window.API_BASE; }
-
-  async function apiSendPush(payload){
-    const url = `${apiBase()}/admin/push/send?host=${encodeURIComponent(tenantHost())}`;
-
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || data?.ok === false) {
+  async function apiJson(path, opts){
+    const url = `${API_BASE}${path}${path.includes("?") ? "&" : "?"}host=${encodeURIComponent(TENANT_HOST)}`;
+    const res = await fetch(url, opts || {});
+    const data = await res.json().catch(()=> ({}));
+    if(!res.ok || data?.ok === false){
       throw new Error(data?.error || `HTTP_${res.status}`);
     }
     return data;
+  }
+
+  // ---------- Load users for Test mode ----------
+  async function loadUsers(){
+    const sel = $("testUser");
+    sel.innerHTML = `<option value="">Yükleniyor...</option>`;
+    try{
+      const out = await apiJson(`/admin/users`, { method:"GET" });
+      const users = out?.users || [];
+      if(!users.length){
+        sel.innerHTML = `<option value="">Kullanıcı yok</option>`;
+        return;
+      }
+      sel.innerHTML = `<option value="">Kullanıcı seç...</option>` + users.map(u=>{
+        const un = (u.username||"").replace(/</g,"&lt;");
+        return `<option value="${un}">${un}</option>`;
+      }).join("");
+    }catch(e){
+      sel.innerHTML = `<option value="">Liste alınamadı</option>`;
+    }
   }
 
   // ---------- Mode ----------
   let mode = "now"; // now | scheduled | test
   const chips = Array.from(document.querySelectorAll(".chip"));
   const scheduledWrap = $("scheduledWrap");
+  const testWrap = $("testWrap");
 
   function applyMode(newMode){
     mode = newMode;
     chips.forEach(c => c.classList.toggle("active", c.dataset.mode === newMode));
     scheduledWrap.style.display = (newMode === "scheduled") ? "block" : "none";
+    testWrap.style.display = (newMode === "test") ? "block" : "none";
+    if(newMode === "test") loadUsers();
   }
   chips.forEach(ch => ch.addEventListener("click", () => applyMode(ch.dataset.mode)));
 
@@ -433,6 +450,8 @@
   const pvMessage = $("pvMessage");
   const pvTimeWrap = $("pvTimeWrap");
   const pvTime = $("pvTime");
+  const pvTargetWrap = $("pvTargetWrap");
+  const pvTarget = $("pvTarget");
 
   function openModal(){
     pvMode.textContent = (mode === "now") ? "Anında" : (mode === "scheduled" ? "Zamanlı" : "Test");
@@ -447,18 +466,20 @@
       pvTimeWrap.style.display = "none";
     }
 
+    if (mode === "test"){
+      const u = ($("testUser").value || "").trim();
+      pvTargetWrap.style.display = "block";
+      pvTarget.textContent = u ? `@${u}` : "—";
+    } else {
+      pvTargetWrap.style.display = "none";
+    }
+
     modalBack.classList.add("show");
   }
 
-  function closeModal(){
-    modalBack.classList.remove("show");
-  }
+  function closeModal(){ modalBack.classList.remove("show"); }
 
-  $("btnPreview").addEventListener("click", () => {
-    clearStatus();
-    openModal();
-  });
-
+  $("btnPreview").addEventListener("click", () => { clearStatus(); openModal(); });
   $("btnClose").addEventListener("click", closeModal);
   modalBack.addEventListener("click", (e) => { if (e.target === modalBack) closeModal(); });
 
@@ -468,17 +489,18 @@
     const message = (msgEl.value || "").trim();
     if (!title || !message) throw new Error("Başlık ve mesaj zorunlu.");
 
-    const payload = { title, message };
+    const payload = { title, message, mode };
 
     if (mode === "scheduled"){
       const at = ($("scheduledAt").value || "").trim();
       if (!at) throw new Error("Zamanlı gönderim için tarih/saat seç.");
       payload.scheduled_at = at;
-      payload.mode = "scheduled";
-    } else if (mode === "test"){
-      payload.mode = "test";
-    } else {
-      payload.mode = "now";
+    }
+
+    if (mode === "test"){
+      const u = ($("testUser").value || "").trim();
+      if (!u) throw new Error("Test için kullanıcı seç.");
+      payload.target_username = u; // Worker bunu desteklemeli
     }
 
     return payload;
@@ -487,29 +509,30 @@
   async function doSend(){
     clearStatus();
     let payload;
-    try {
-      payload = buildPayload();
-    } catch (e){
-      setStatus("warn", e.message || "Eksik bilgi.");
-      return;
-    }
+    try { payload = buildPayload(); }
+    catch (e){ setStatus("warn", e.message || "Eksik bilgi."); return; }
 
     setStatus("", "Gönderiliyor...");
-    try {
-      const out = await apiSendPush(payload);
-      setStatus("ok", `Gönderildi ✅ sent=${out.sent} failed=${out.failed}`);
-    } catch (e){
+    try{
+      const out = await apiJson(`/admin/push/send`, {
+        method:"POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (mode === "scheduled"){
+        setStatus("ok", `Zamanlandı ✅ campaign_id=${out.campaign_id || "-"}`);
+      } else {
+        setStatus("ok", `Gönderildi ✅ sent=${out.sent} failed=${out.failed}`);
+      }
+    }catch(e){
       setStatus("bad", `Hata ❌ ${e.message || e}`);
     }
   }
 
   $("btnSend").addEventListener("click", doSend);
-  $("btnConfirm").addEventListener("click", async () => {
-    closeModal();
-    await doSend();
-  });
+  $("btnConfirm").addEventListener("click", async () => { closeModal(); await doSend(); });
 
-  // Logout
   $("btnLogout").addEventListener("click", () => {
     try { localStorage.removeItem("betapp_admin_session"); } catch {}
     window.location.href = "index.html";
